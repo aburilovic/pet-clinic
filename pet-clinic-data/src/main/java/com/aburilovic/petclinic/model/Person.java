@@ -1,15 +1,15 @@
 package com.aburilovic.petclinic.model;
 
 public class Person extends BaseEntity {
-    private String firstNamel;
+    private String firstName;
     private String lastName;
 
-    public String getFirstNamel() {
-        return firstNamel;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstNamel(String firstNamel) {
-        this.firstNamel = firstNamel;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
