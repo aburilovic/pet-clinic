@@ -1,15 +1,13 @@
 package com.aburilovic.petclinic.service.map;
 
+import com.aburilovic.petclinic.model.BaseEntity;
 import com.aburilovic.petclinic.service.CrudService;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-abstract class AbstractMapService<T, ID> implements CrudService<T, ID> {
+abstract class AbstractMapService<T extends BaseEntity, ID extends Long> implements CrudService<T, ID> {
 
-    private Map<ID, T> map = new HashMap<>();
+    private Map<Long, T> map = new HashMap<>();
 
     @Override
     public Set<T> findAll() {
@@ -21,8 +19,16 @@ abstract class AbstractMapService<T, ID> implements CrudService<T, ID> {
         return map.get(id);
     }
 
-    T save(ID id, T object) {
-        map.put(id, object);
+    public T save(T object) {
+        if (object != null) {
+            if (object.getId() == null) {
+                object.setId(getNextId());
+            }
+            map.put(object.getId(), object);
+        } else {
+            throw new RuntimeException("Object cannot be null...");
+        }
+
         return object;
     }
 
@@ -34,5 +40,15 @@ abstract class AbstractMapService<T, ID> implements CrudService<T, ID> {
     @Override
     public void delete(T object) {
         map.entrySet().removeIf(entry -> entry.getValue().equals(object));
+    }
+
+    private Long getNextId() {
+        Long nextId = null;
+        try {
+            nextId = Collections.max(map.keySet()) + 1;
+        } catch (NoSuchElementException e) {
+            nextId = 1L;
+        }
+        return nextId;
     }
 }
